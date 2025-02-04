@@ -24,10 +24,10 @@ exports.obterPedido = async (request, reply) => {
 };
 
 exports.criarPedido = async (request, reply) => {
-  const { data, id_cliente } = request.body;
+  const { id_cliente } = request.body;
   try {
-    const [result] = await db.query('INSERT INTO pedidos (data, id_cliente) VALUES (?, ?)', [data, id_cliente]);
-    reply.status(201).send({ id: result.insertId, data, id_cliente });
+    const [result] = await db.query('INSERT INTO pedidos (data, id_cliente) VALUES (NOW(), ?)', [id_cliente]);
+    reply.status(201).send({ id: result.insertId, id_cliente });
   } catch (error) {
     reply.status(500).send({ error: 'Erro ao criar pedido' });
   }
@@ -37,8 +37,8 @@ exports.atualizarPedido = async (request, reply) => {
   const { id } = request.params;
   const { data, id_cliente } = request.body;
   try {
-    await db.query('UPDATE pedidos SET data = ?, id_cliente = ? WHERE id_pedido = ?', [data, id_cliente, id]);
-    reply.send({ id, data, id_cliente });
+    await db.query('UPDATE pedidos SET data = NOW(), id_cliente = ? WHERE id_pedido = ?', [id_cliente, id]);
+    reply.send({ id, id_cliente });
   } catch (error) {
     reply.status(500).send({ error: 'Erro ao atualizar pedido' });
   }

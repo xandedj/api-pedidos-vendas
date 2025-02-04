@@ -14,6 +14,14 @@ const cors = require('fastify-cors');
 //   }
 // });
 
+// Registre o plugin fastify-cors
+fastify.register(require('@fastify/cors'), {
+  // configure CORS aqui
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
+});
+
 // Registre as rotas aqui
 
 fastify.register(require('./routes/produtoRoutes'));

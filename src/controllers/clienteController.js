@@ -9,10 +9,10 @@ exports.listarClientes = async (request, reply) => {
   }
 };
 
-exports.obterClientes = async (request, reply) => {
+exports.obterCliente = async (request, reply) => {
   const { id } = request.params;
   try {
-    const [rows] = await db.query('SELECT * FROM produtos WHERE id_cliente = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM clientes WHERE id_cliente = ?', [id]);
     if (rows.length === 0) {
       reply.status(404).send({ error: 'Cliente não encontrado' });
     } else {
@@ -24,21 +24,21 @@ exports.obterClientes = async (request, reply) => {
 };
 
 exports.criarCliente = async (request, reply) => {
-  const { nome, preco } = request.body;
+  const { nome, email } = request.body;
   try {
-    const [result] = await db.query('INSERT INTO clientes (nome, email) VALUES (?, ?)', [nome, preco]);
-    reply.status(201).send({ id: result.insertId, nome, preco });
+    const [result] = await db.query('INSERT INTO clientes (nome, email) VALUES (?, ?)', [nome, email]);
+    reply.status(201).send({ id: result.insertId, nome, email });
   } catch (error) {
-    reply.status(500).send({ error: 'Erro ao criar o cliente' });
+    reply.status(500).send({ error: 'Erro ao criar cliente' });
   }
 };
 
 exports.atualizarCliente = async (request, reply) => {
   const { id } = request.params;
-  const { nome, preco } = request.body;
+  const { nome, email } = request.body;
   try {
-    await db.query('UPDATE clientes SET nome = ?, email = ? WHERE id_cliente = ?', [nome, preco, id]);
-    reply.send({ id, nome, preco });
+    await db.query('UPDATE clientes SET nome = ?, email = ? WHERE id_cliente = ?', [nome, email, id]);
+    reply.send({ id, nome, email });
   } catch (error) {
     reply.status(500).send({ error: 'Erro ao atualizar os dados do cliente' });
   }
